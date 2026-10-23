@@ -1,0 +1,15 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graphify 3D</title><link rel="stylesheet" href="style.css"></head><body>
+<div id="boot" class="mono"><div>Menginisialisasi peta graphify…</div><div class="bar"><i id="bar"></i></div></div>
+<div id="g"></div>
+<div class="hud mono" id="hud-title"><h2>GRAPHIFY // MAP</h2><div style="color:var(--dim)">Neural code topology</div></div>
+<div class="hud mono" id="hud-stats">Node <b id="s-n">0</b><br>Link <b id="s-l">0</b><br>Cluster <b id="s-c">0</b></div>
+<div class="hud panel" id="hud-info"><div class="label mono">Target</div><h3 id="i-title" class="mono">Klik sebuah node</h3><p id="i-body">Putar dengan drag, zoom dengan scroll.</p></div>
+<div class="hud" id="hud-ctl">
+<input id="search" class="mono" placeholder="Cari node…">
+<button class="btn mono" id="b-rot">Auto-rotate: ON</button>
+<button class="btn mono" id="b-reset">Reset</button>
+<a class="btn gold mono" href="console.html">← Console</a></div>
+<script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+<script src="https://unpkg.com/3d-force-graph@1.73.4/dist/3d-force-graph.min.js"></script>
+<script type="module" src="js/graph.js"></script></body></html>
