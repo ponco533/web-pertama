@@ -1,0 +1,37 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "graphify hook-guard search",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "graphify hook-guard read",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "python -c \"import sys;sys.stdout.reconfigure(encoding='utf-8');print('WAJIB: baca peta graphify ini dulu sebelum coding.\n');print(open('graphify-out/GRAPH_REPORT.md',encoding='utf-8').read()[:8000])\""
+          }
+        ]
+      }
+    ]
+  }
+}
