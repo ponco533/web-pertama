@@ -1,6 +1,8 @@
 // Simulator perpustakaan braille: teks -> sel 6 titik -> halaman, plus total BOM.
 // Logika konversi & paginasi sama dengan yang akan dipakai firmware ESP32.
 
+import { initMechanism } from "./braille-mech.js";
+
 const $ = id => document.getElementById(id);
 
 // Titik: 1-2-3 kolom kiri (atas ke bawah), 4-5-6 kolom kanan.
@@ -97,6 +99,7 @@ async function initSimulator() {
     $("prev").disabled = page === 0;
     $("next").disabled = page >= pages.length - 1;
     $("live").textContent = book.title + ", halaman " + (page + 1) + " dari " + pages.length + ". " + plain;
+    document.dispatchEvent(new CustomEvent("braille:page", { detail: { lines, page } }));
   }
 
   function open(id) {
@@ -137,4 +140,5 @@ function initBom() {
 }
 
 initBom();
+initMechanism();
 initSimulator().catch(err => { $("live").textContent = "Gagal memuat katalog buku: " + err.message; });

@@ -1,8 +1,11 @@
 {
-  "0": "loadGraph",
+  "0": "braille-mech.js",
   "1": "main.js",
   "2": "graph.js",
   "3": "CLAUDE.md",
   "4": "braille.js",
-  "5": "initSimulator"
+  "5": "initMechanism",
+  "6": "finish",
+  "7": "loop",
+  "8": "run"
 }

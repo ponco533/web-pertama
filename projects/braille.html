@@ -85,30 +85,26 @@ select{background:#0b1622;color:var(--text);border:1px solid var(--cyan);padding
 
 <section aria-labelledby="h-mech">
 <h2 class="sec" id="h-mech">Mekanisme (tampak samping)</h2>
-<div class="panel"><figure>
-<svg class="diagram" viewBox="0 0 640 230" role="img" aria-labelledby="mech-cap" font-family="Consolas,monospace" font-size="11">
-<g fill="none" stroke="var(--cyan)" stroke-width="1.5">
-<rect x="40" y="70" width="560" height="22"/><rect x="40" y="92" width="560" height="8" stroke="var(--dim)"/>
-<line x1="40" y1="190" x2="600" y2="190" stroke="var(--dim)" stroke-dasharray="4 4"/>
-<rect x="250" y="130" width="90" height="50"/><rect x="282" y="108" width="26" height="22" stroke="var(--gold)"/>
-<circle cx="380" cy="56" r="11" stroke="var(--gold)"/><line x1="380" y1="45" x2="380" y2="20"/><line x1="340" y1="155" x2="380" y2="155"/><line x1="380" y1="155" x2="380" y2="105" stroke-dasharray="3 3"/>
-</g>
-<g fill="var(--gold)">
-<rect x="80" y="58" width="5" height="44"/><rect x="120" y="58" width="5" height="44"/><rect x="200" y="58" width="5" height="44"/><rect x="292" y="58" width="5" height="44"/>
-</g>
-<g fill="var(--dim)">
-<rect x="100" y="70" width="5" height="44"/><rect x="160" y="70" width="5" height="44"/><rect x="240" y="70" width="5" height="44"/><rect x="420" y="70" width="5" height="44"/><rect x="470" y="70" width="5" height="44"/><rect x="520" y="70" width="5" height="44"/>
-</g>
-<g fill="var(--text)">
-<text x="40" y="40">pin naik (terbaca)</text><text x="440" y="132">pin turun</text>
-<text x="400" y="30">roller reset (diangkat SG90)</text>
-<text x="44" y="122">pelat pin + lapisan silikon 1 mm</text>
-<text x="210" y="205">carriage XY + solenoid dorong</text>
-<text x="472" y="205">rel GT2 / NEMA17 →</text>
-</g>
-</svg>
-<figcaption id="mech-cap">Pin baja menembus pelat dan tertahan gesekan lapisan silikon. Carriage bergerak di bawah pelat dan membawa solenoid yang mendorong pin ke atas. Roller reset dipasang di depan carriage dan menekan pin ke bawah. Roller ini diturunkan saat lintasan reset dan diangkat saat lintasan penyetelan.</figcaption>
-</figure></div>
+<p>Simulasi satu baris titik (40 pin) dilihat dari samping, memakai pola dari halaman yang sedang dipilih di simulator. Ganti halaman di atas, maka mekanisme akan berjalan: roller meratakan pin lama, lalu solenoid mendorong pin baru.</p>
+<div class="panel" style="margin-top:12px"><figure style="margin:0">
+<svg class="diagram" id="mech-svg" viewBox="0 0 640 245" role="img" aria-labelledby="mech-cap" font-family="Consolas,monospace"></svg>
+<figcaption id="mech-cap">Pin baja tertahan gesekan lapisan silikon. Carriage di bawah pelat membawa solenoid yang mendorong pin ke atas. Roller reset dipasang di depan carriage lewat rangka-C, diturunkan servo saat lintasan reset (kiri ke kanan), lalu diangkat saat lintasan setel (kanan ke kiri, serpentine). Panjang roller menutupi keempat baris, jadi satu lintasan reset meratakan seluruh halaman.</figcaption>
+</figure>
+<div class="ctl">
+<button class="btn gold mono" id="mech-run">▶ Jalankan</button>
+<label class="mono label">Baris braille
+<select id="mech-line"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option></select></label>
+<label class="mono label">Baris titik
+<select id="mech-dotrow"><option value="0">atas (1·4)</option><option value="1">tengah (2·5)</option><option value="2">bawah (3·6)</option></select></label>
+<label class="mono label">Kecepatan <input type="range" id="mech-speed" min="0.1" max="2" step="0.1" value="0.5"> <output id="mech-speed-out">0.5×</output></label>
+<label class="mono label"><input type="checkbox" id="mech-auto"> Otomatis saat ganti halaman</label>
+</div>
+<p id="mech-phase" aria-live="polite" style="margin-top:12px">—</p>
+<div class="grid" style="margin-top:12px">
+<div><div class="label mono">Waktu nyata baris ini</div><p class="stat" id="mech-real">0.00 s</p></div>
+<div><div class="label mono">Estimasi 1 halaman penuh</div><p class="stat" id="mech-page">—</p><div class="label mono">1 reset + 12 lintasan setel</div></div>
+</div>
+</div>
 </section>
 
 <section aria-labelledby="h-block">
