@@ -11,3 +11,8 @@ Rules:
 
 ## Wajib di awal sesi
 Setiap sesi baru: baca graphify-out/GRAPH_REPORT.md (dimuat otomatis oleh hook SessionStart) sebelum mulai coding. Jangan edit atau cari kode sebelum peta dibaca.
+
+## Skill aktif untuk proyek ini
+- Setiap membuat/mengubah halaman: pakai skill `medtech-web-design`.
+- Setiap merancang hardware/memilih komponen/BOM: pakai skill `low-cost-hardware-design`.
+- Halaman proyek ada di `projects/<slug>.html`, JS di `js/<slug>.js`, data di `data/`.

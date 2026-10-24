@@ -1,5 +1,8 @@
 {
   "0": "loadGraph",
   "1": "main.js",
-  "2": "graph.js"
+  "2": "graph.js",
+  "3": "CLAUDE.md",
+  "4": "braille.js",
+  "5": "initSimulator"
 }

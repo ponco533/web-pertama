@@ -36,3 +36,23 @@ nav a{color:var(--dim);text-decoration:none;font-size:.75rem}nav a:hover{color:v
 #search{background:rgba(8,20,34,.8);border:1px solid var(--cyan);color:var(--text);padding:8px 10px;font:inherit;width:190px}
 #boot{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:var(--cyan);transition:opacity .8s}
 #boot .bar{width:260px;height:3px;background:#0d2233}#boot .bar i{display:block;height:100%;width:0;background:var(--cyan);box-shadow:0 0 10px var(--cyan);transition:width .4s}
+/* aksesibilitas & komponen proyek */
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--cyan);color:var(--bg);padding:8px 12px;z-index:50}
+.skip:focus{left:8px}
+h2.sec{font-weight:300;color:var(--cyan);font-size:1.5rem;margin:48px 0 14px}
+section p,section li{line-height:1.65}
+section ul,section ol{padding-left:22px;margin-top:8px}
+.tbl{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{border-bottom:1px solid rgba(61,230,255,.18);padding:8px 10px;text-align:left;vertical-align:top}
+th{color:var(--cyan);font-weight:400;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+td.num{text-align:right;white-space:nowrap;font-family:Consolas,monospace}
+tfoot td{color:var(--gold);font-size:1rem;border-bottom:0}
+.panel.warn{border-color:rgba(255,77,94,.5)}.panel.warn::before,.panel.warn::after{border-color:var(--red)}
+.panel.warn h2.sec{color:var(--red);margin-top:0}
+.chosen{color:var(--gold)}
+figure{margin:14px 0 0}figcaption{color:var(--dim);font-size:.82rem;margin-top:8px;line-height:1.5}
+svg.diagram{width:100%;height:auto;display:block}
+.tag{display:inline-block;font-size:.66rem;padding:2px 8px;border:1px solid var(--gold);color:var(--gold);margin-right:6px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}

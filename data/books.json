@@ -1,0 +1,25 @@
+{
+  "format": "braille-library/v1",
+  "cellsPerLine": 20,
+  "linesPerPage": 4,
+  "books": [
+    {
+      "id": "pancasila",
+      "title": "Pancasila",
+      "author": "Dasar Negara Republik Indonesia",
+      "text": "Satu, Ketuhanan Yang Maha Esa. Dua, Kemanusiaan yang adil dan beradab. Tiga, Persatuan Indonesia. Empat, Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan perwakilan. Lima, Keadilan sosial bagi seluruh rakyat Indonesia."
+    },
+    {
+      "id": "tentang-braille",
+      "title": "Mengenal Huruf Braille",
+      "author": "Web Pertamaku",
+      "text": "Huruf braille dibaca dengan ujung jari. Setiap sel punya 6 titik dalam 2 kolom dan 3 baris. Titik yang timbul membentuk huruf, angka, atau tanda baca. Sistem ini diciptakan oleh Louis Braille pada tahun 1824 ketika ia berusia 15 tahun."
+    },
+    {
+      "id": "kancil",
+      "title": "Kancil dan Buaya",
+      "author": "Cerita rakyat, diceritakan ulang",
+      "text": "Kancil ingin menyeberang sungai. Di sungai ada banyak buaya yang lapar. Kancil berkata, raja meminta semua buaya dihitung. Para buaya pun berbaris dari tepi ke tepi. Kancil melompat di atas punggung mereka sambil menghitung, lalu sampai di seberang dengan selamat."
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perpustakaan Braille</title>
+<meta name="description" content="Rancangan layar braille refreshable berbiaya rendah untuk perpustakaan tunanetra: simulator, spesifikasi, diagram blok, dan BOM.">
+<link rel="stylesheet" href="../style.css">
+<style>
+.board{display:flex;flex-direction:column;gap:14px;padding:18px;background:#0b1622;border:1px solid rgba(61,230,255,.25);overflow-x:auto}
+.brow{display:flex;gap:9px;min-width:max-content}
+.bcell{display:grid;grid-template-columns:repeat(2,9px);grid-auto-rows:9px;gap:4px}
+.bcell i{width:9px;height:9px;border-radius:50%;background:#16293a;box-shadow:inset 0 1px 2px #000}
+.bcell i.up{background:radial-gradient(circle at 35% 30%,#fff3d6,var(--gold) 55%,#a86a10);box-shadow:0 0 6px rgba(255,180,61,.7)}
+@media (prefers-reduced-motion:no-preference){.refresh .bcell i.up{animation:rise .35s backwards;animation-delay:inherit}.refresh .bcell{animation:none}}
+.bcell{animation-delay:0s}.bcell i{animation-delay:inherit}
+@keyframes rise{from{transform:scale(.2);opacity:.2}}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.ctl .btn{margin:0}.btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;background:transparent;color:var(--cyan)}
+select{background:#0b1622;color:var(--text);border:1px solid var(--cyan);padding:9px;font:inherit;max-width:100%}
+#ink{margin-top:12px;color:var(--text);font-size:.95rem;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:24px}
+</style></head><body>
+<a class="skip" href="#main">Lewati ke konten</a>
+<div class="wrap">
+<nav class="mono" aria-label="Navigasi"><span><span class="dot"></span>Proyek // Assistive Tech</span><a href="../index.html">← Beranda</a></nav>
+<main id="main">
+
+<header>
+<p class="label mono"><span class="tag">Prototipe</span> Elektronika rehabilitasi</p>
+<h1>Perpustakaan Braille</h1>
+<p class="sub">Layar braille yang titik timbulnya berubah setiap kali pembaca memilih halaman berikutnya. Bukunya diunduh dari perpustakaan web ini. Targetnya: biaya serendah mungkin dengan komponen pasaran.</p>
+<div class="hero-stats">
+<div class="panel"><div class="label mono">Estimasi biaya</div><p class="stat" id="hero-cost">—</p></div>
+<div class="panel"><div class="label mono">Kapasitas</div><p class="stat">4 × 20</p><div class="label mono">baris × sel</div></div>
+<div class="panel"><div class="label mono">Aktuator berulang</div><p class="stat">0</p><div class="label mono">pin pasif bistabil</div></div>
+</div>
+</header>
+
+<section id="sim" aria-labelledby="h-sim">
+<h2 class="sec" id="h-sim">Simulator layar</h2>
+<p>Pilih buku, lalu tekan <b>Halaman berikutnya</b> (atau tombol panah). Titik emas adalah titik yang timbul. Pembaca layar akan membacakan isi halaman.</p>
+<div class="panel" style="margin-top:12px">
+<label class="label mono" for="book">Buku</label><br>
+<select id="book"></select>
+<div class="board" id="board" role="img" aria-label="Tampilan sel braille halaman aktif" style="margin-top:14px"></div>
+<div class="ctl">
+<button class="btn mono" id="prev">◀ Halaman sebelumnya</button>
+<span class="mono" id="pageno" aria-hidden="true">—</span>
+<button class="btn gold mono" id="next">Halaman berikutnya ▶</button>
+<button class="btn mono" id="toggle-ink" aria-pressed="true">Teks awas</button>
+</div>
+<p id="ink"></p>
+<p class="sr" id="live" aria-live="polite"></p>
+</div>
+</section>
+
+<section aria-labelledby="h-spec">
+<h2 class="sec" id="h-spec">Spesifikasi</h2>
+<div class="panel tbl"><table>
+<thead><tr><th>Parameter</th><th>Nilai</th><th>Acuan</th></tr></thead>
+<tbody>
+<tr><td>Sistem huruf</td><td>Braille 6 titik, Grade 1 (huruf Latin, angka, tanda baca)</td><td>Pedoman Braille Indonesia</td></tr>
+<tr><td>Diameter titik</td><td>± 1,5 mm</td><td>Marburg Medium (1,3–1,6 mm)</td></tr>
+<tr><td>Tinggi titik timbul</td><td>0,5–0,8 mm</td><td>Umum untuk layar refreshable</td></tr>
+<tr><td>Jarak titik dalam sel</td><td>2,5 mm</td><td>Marburg Medium</td></tr>
+<tr><td>Jarak antar sel / antar baris</td><td>6,0 mm / 10,0 mm</td><td>Marburg Medium</td></tr>
+<tr><td>Ukuran halaman</td><td>4 baris × 20 sel = 480 pin (bisa diperbesar ke 9 × 40)</td><td>—</td></tr>
+<tr><td>Waktu ganti halaman</td><td>± 30–40 s (1 solenoid), ± 12–15 s (3 solenoid)</td><td>Estimasi, perlu diukur</td></tr>
+<tr><td>Daya</td><td>Adaptor 12 V 3 A (SNI), opsi baterai 3S Li-ion</td><td>Lihat anggaran daya</td></tr>
+<tr><td>Sumber buku</td><td>microSD (.txt) + unduh via Wi-Fi dari <code>data/books.json</code></td><td>Format braille-library/v1</td></tr>
+</tbody></table></div>
+</section>
+
+<section aria-labelledby="h-alt">
+<h2 class="sec" id="h-alt">Pemilihan arsitektur aktuator</h2>
+<p>Bagian termahal sebuah layar braille adalah aktuatornya, karena dibutuhkan satu untuk tiap titik: 480 titik untuk satu halaman. Karena itu, aktuator inilah yang paling dioptimalkan.</p>
+<div class="panel tbl"><table>
+<thead><tr><th>Opsi</th><th>Biaya 480 titik</th><th>Daya tahan posisi</th><th>Kelebihan</th><th>Kekurangan</th></tr></thead>
+<tbody>
+<tr><td>Sel piezo bimorph komersial</td><td class="num">± Rp 50 jt+</td><td>Butuh tegangan ± 200 V</td><td>Cepat, senyap, rasa terbaik</td><td>Sangat mahal, driver HV</td></tr>
+<tr><td>Solenoid mini per titik</td><td class="num">± Rp 12 jt+</td><td>Arus terus-menerus</td><td>Cepat, sederhana secara logika</td><td>480 driver, panas, tidak muat jarak 2,5 mm</td></tr>
+<tr><td>Drum putar 3 titik + servo SG90</td><td class="num">± Rp 2,5 jt</td><td>Ditahan servo</td><td>8 pola per kolom, 2 servo/sel</td><td>160 servo, bising, servo tak muat jarak 6 mm</td></tr>
+<tr class="chosen"><td><b>Pin pasif bistabil + kepala penyetel bergerak</b></td><td class="num">± Rp 1,1 jt</td><td>Nol (ditahan gesekan)</td><td>Biaya hampir tidak naik dengan jumlah sel; hemat daya</td><td>Ganti halaman lebih lambat; presisi mekanik penting</td></tr>
+</tbody></table></div>
+<p style="margin-top:12px"><b class="chosen">Dipilih: pin pasif bistabil.</b> Pin baja Ø 1,5 mm duduk di pelat berlubang dengan lapisan silikon tipis, sehingga tetap di posisi naik atau turun tanpa daya. Satu kepala XY bergerak di bawah pelat. Di depannya ada <i>roller reset</i> yang meratakan baris lama, lalu satu solenoid mendorong naik pin yang perlu timbul. Prinsipnya mirip layar multibaris Canute 360: 480 aktuator diganti 2 motor + 1 solenoid + 1 servo.</p>
+</section>
+
+<section aria-labelledby="h-mech">
+<h2 class="sec" id="h-mech">Mekanisme (tampak samping)</h2>
+<div class="panel"><figure>
+<svg class="diagram" viewBox="0 0 640 230" role="img" aria-labelledby="mech-cap" font-family="Consolas,monospace" font-size="11">
+<g fill="none" stroke="var(--cyan)" stroke-width="1.5">
+<rect x="40" y="70" width="560" height="22"/><rect x="40" y="92" width="560" height="8" stroke="var(--dim)"/>
+<line x1="40" y1="190" x2="600" y2="190" stroke="var(--dim)" stroke-dasharray="4 4"/>
+<rect x="250" y="130" width="90" height="50"/><rect x="282" y="108" width="26" height="22" stroke="var(--gold)"/>
+<circle cx="380" cy="56" r="11" stroke="var(--gold)"/><line x1="380" y1="45" x2="380" y2="20"/><line x1="340" y1="155" x2="380" y2="155"/><line x1="380" y1="155" x2="380" y2="105" stroke-dasharray="3 3"/>
+</g>
+<g fill="var(--gold)">
+<rect x="80" y="58" width="5" height="44"/><rect x="120" y="58" width="5" height="44"/><rect x="200" y="58" width="5" height="44"/><rect x="292" y="58" width="5" height="44"/>
+</g>
+<g fill="var(--dim)">
+<rect x="100" y="70" width="5" height="44"/><rect x="160" y="70" width="5" height="44"/><rect x="240" y="70" width="5" height="44"/><rect x="420" y="70" width="5" height="44"/><rect x="470" y="70" width="5" height="44"/><rect x="520" y="70" width="5" height="44"/>
+</g>
+<g fill="var(--text)">
+<text x="40" y="40">pin naik (terbaca)</text><text x="440" y="132">pin turun</text>
+<text x="400" y="30">roller reset (diangkat SG90)</text>
+<text x="44" y="122">pelat pin + lapisan silikon 1 mm</text>
+<text x="210" y="205">carriage XY + solenoid dorong</text>
+<text x="472" y="205">rel GT2 / NEMA17 →</text>
+</g>
+</svg>
+<figcaption id="mech-cap">Pin baja menembus pelat dan tertahan gesekan lapisan silikon. Carriage bergerak di bawah pelat dan membawa solenoid yang mendorong pin ke atas. Roller reset dipasang di depan carriage dan menekan pin ke bawah. Roller ini diturunkan saat lintasan reset dan diangkat saat lintasan penyetelan.</figcaption>
+</figure></div>
+</section>
+
+<section aria-labelledby="h-block">
+<h2 class="sec" id="h-block">Diagram blok</h2>
+<div class="panel"><figure>
+<svg class="diagram" viewBox="0 0 680 300" role="img" aria-labelledby="blk-cap" font-family="Consolas,monospace" font-size="11">
+<defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--cyan)"/></marker>
+<marker id="ap" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--red)"/></marker></defs>
+<g fill="none" stroke-width="1.5">
+<g stroke="var(--red)"><rect x="10" y="10" width="130" height="40"/><rect x="10" y="140" width="130" height="40"/></g>
+<rect x="250" y="130" width="160" height="60" stroke="var(--gold)"/>
+<g stroke="var(--cyan)"><rect x="500" y="4" width="170" height="40"/><rect x="500" y="62" width="170" height="36"/><rect x="500" y="114" width="170" height="36"/><rect x="500" y="166" width="170" height="36"/><rect x="10" y="250" width="170" height="36"/><rect x="250" y="250" width="160" height="36"/><rect x="500" y="250" width="170" height="36"/></g>
+<g stroke="var(--red)" marker-end="url(#ap)"><path d="M75 50V138"/><path d="M140 30H430V16H498"/><path d="M140 160H248"/></g>
+<g stroke="var(--cyan)" marker-end="url(#ar)"><path d="M410 140H450V34H498"/><path d="M410 150H460V86H498"/><path d="M410 160H470V132H498"/><path d="M410 178H480V184H498"/><path d="M180 268H220V180H248"/><path d="M330 248V192"/><path d="M498 268H395V192" stroke-dasharray="5 4"/></g>
+</g>
+<g fill="var(--text)">
+<text x="20" y="34">Adaptor 12 V 3 A</text><text x="20" y="164">Buck 5 V 3 A</text>
+<text x="200" y="24" fill="var(--red)">12 V → A4988 X &amp; Y</text><text x="150" y="152" fill="var(--red)">5 V</text>
+<text x="14" y="206" fill="var(--red)">5 V juga ke solenoid &amp; servo</text>
+<text x="286" y="156" fill="var(--gold)">ESP32 DevKit</text><text x="272" y="174">firmware · Wi-Fi</text>
+<text x="510" y="22">A4988 X → NEMA17 X</text><text x="510" y="84">A4988 Y → NEMA17 Y</text>
+<text x="510" y="136">MOSFET → solenoid</text><text x="510" y="188">SG90 roller reset</text>
+<text x="20" y="272">tombol, endstop</text><text x="268" y="272">microSD (SPI)</text><text x="510" y="272">Web: books.json</text>
+<text x="420" y="240" fill="var(--dim)">Wi-Fi</text>
+</g>
+</svg>
+<figcaption id="blk-cap">Daya (merah): adaptor 12 V menyuplai dua driver A4988 untuk motor stepper X dan Y. Buck converter menurunkannya ke 5 V untuk ESP32, solenoid, dan servo. Sinyal (biru): ESP32 mengirim STEP/DIR ke kedua driver, menyalakan solenoid lewat MOSFET, dan menggerakkan servo roller dengan PWM. ESP32 juga membaca endstop, tombol, dan microSD, lalu mengunduh buku dari web lewat Wi-Fi.</figcaption>
+</figure></div>
+</section>
+
+<section aria-labelledby="h-bom">
+<h2 class="sec" id="h-bom">Bill of Materials</h2>
+<p class="label mono">Harga estimasi marketplace Indonesia, Oktober 2026. Total dihitung otomatis.</p>
+<div class="panel tbl"><table id="bom">
+<thead><tr><th>No</th><th>Komponen</th><th>Fungsi</th><th>Qty</th><th>Harga satuan</th><th>Subtotal</th></tr></thead>
+<tbody>
+<tr data-qty="1" data-price="55000"><td>1</td><td>ESP32 DevKit V1</td><td>Kontroler + Wi-Fi</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="2" data-price="95000"><td>2</td><td>Motor stepper NEMA17</td><td>Gerak carriage X dan Y</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="2" data-price="20000"><td>3</td><td>Driver A4988 + heatsink</td><td>Driver stepper</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="30000"><td>4</td><td>Solenoid dorong mini 5 V (JF-0530B)</td><td>Mendorong pin naik</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="10000"><td>5</td><td>MOSFET logic-level AO3400 + dioda SS14 + resistor</td><td>Driver solenoid + flyback</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="15000"><td>6</td><td>Servo SG90</td><td>Angkat/turun roller reset</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="45000"><td>7</td><td>Belt GT2 2 m + 2 pulley 20T + 2 idler</td><td>Transmisi XY</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="90000"><td>8</td><td>4 rod 8 mm × 25 cm + 6 LM8UU</td><td>Rel linear</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="2" data-price="3000"><td>9</td><td>Limit switch mikro</td><td>Homing X/Y</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="45000"><td>10</td><td>Modul microSD + kartu 8 GB</td><td>Penyimpanan buku</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="4" data-price="2500"><td>11</td><td>Tombol taktil 12 mm + tutup bertekstur</td><td>Berikut, sebelum, menu, pilih</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="3000"><td>12</td><td>Buzzer aktif 5 V</td><td>Bunyi "halaman siap"</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="45000"><td>13</td><td>Adaptor 12 V 3 A (SNI)</td><td>Catu daya utama</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="15000"><td>14</td><td>Buck LM2596 / MP1584 5 V 3 A</td><td>Rel 5 V</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="35000"><td>15</td><td>Perfboard, header, kapasitor 100 µF, kabel, polyfuse</td><td>Perakitan</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="5" data-price="15000"><td>16</td><td>Batang stainless Ø 1,5 mm × 1 m</td><td>Dipotong jadi 480 pin × 10 mm</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="25000"><td>17</td><td>Lembar silikon 1 mm</td><td>Penahan gesek (bistabil)</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="150000"><td>18</td><td>Pelat pin presisi (jasa resin print / laser akrilik)</td><td>480 lubang, jarak 2,5 / 6 / 10 mm</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="120000"><td>19</td><td>Rangka + casing (filamen PETG / jasa print)</td><td>Struktur</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+<tr data-qty="1" data-price="30000"><td>20</td><td>Baut/mur M3, bearing 623ZZ (roller)</td><td>Mekanik</td><td class="num q"></td><td class="num p"></td><td class="num s"></td></tr>
+</tbody>
+<tfoot><tr><td colspan="5">Total estimasi</td><td class="num" id="bom-total">—</td></tr></tfoot>
+</table></div>
+<p style="margin-top:10px">Bisa lebih murah: versi 1 baris × 20 sel cukup memakai sumbu X saja, jadi satu NEMA17, satu A4988, dan dua rod bisa dihapus (sekitar −Rp 160 rb). NEMA17 juga bisa diganti 28BYJ-48 + ULN2003, tapi geraknya lebih lambat.</p>
+</section>
+
+<section aria-labelledby="h-power">
+<h2 class="sec" id="h-power">Anggaran daya & pin map</h2>
+<div class="grid" style="margin-top:0">
+<div class="panel tbl"><table>
+<thead><tr><th>Beban</th><th>Rel</th><th>Puncak</th></tr></thead>
+<tbody>
+<tr><td>2 × NEMA17 (limit 0,8 A)</td><td>12 V</td><td class="num">± 1,2 A</td></tr>
+<tr><td>Solenoid (pulsa 30 ms)</td><td>5 V</td><td class="num">1,0 A</td></tr>
+<tr><td>SG90 (tidak bersamaan solenoid)</td><td>5 V</td><td class="num">0,7 A</td></tr>
+<tr><td>ESP32 + Wi-Fi</td><td>5 V</td><td class="num">0,3 A</td></tr>
+<tr><td>Rel 5 V terburuk → dari 12 V (η 85%)</td><td>12 V</td><td class="num">± 0,65 A</td></tr>
+<tr><td><b>Total 12 V</b></td><td></td><td class="num chosen">± 1,9 A</td></tr>
+</tbody></table></div>
+<div class="panel tbl"><table>
+<thead><tr><th>Sinyal</th><th>GPIO</th></tr></thead>
+<tbody>
+<tr><td>X STEP / DIR</td><td class="num">26 / 27</td></tr>
+<tr><td>Y STEP / DIR</td><td class="num">32 / 33</td></tr>
+<tr><td>Driver EN (bersama)</td><td class="num">25</td></tr>
+<tr><td>Solenoid (gate, pull-down 10 k)</td><td class="num">13</td></tr>
+<tr><td>Servo roller</td><td class="num">14</td></tr>
+<tr><td>Endstop X / Y (pull-up eksternal)</td><td class="num">34 / 35</td></tr>
+<tr><td>SD CS / SCK / MISO / MOSI</td><td class="num">5 / 18 / 19 / 23</td></tr>
+<tr><td>Tombol berikut / sebelum / menu / pilih</td><td class="num">4 / 16 / 17 / 22</td></tr>
+<tr><td>Buzzer</td><td class="num">21</td></tr>
+</tbody></table></div>
+</div>
+</section>
+
+<section aria-labelledby="h-fw">
+<h2 class="sec" id="h-fw">Alur firmware</h2>
+<div class="panel"><ol>
+<li><b>BOOT:</b> homing X/Y ke endstop, buka indeks buku dari microSD, lalu sinkron <code>books.json</code> lewat Wi-Fi bila tersedia.</li>
+<li><b>PILIH BUKU:</b> judul ditampilkan di baris 1 dalam braille. Tombol menu/pilih untuk berpindah dan memilih.</li>
+<li><b>PAGINASI:</b> teks diubah ke sel braille dengan algoritma yang sama seperti simulator di atas (word-wrap 20 sel, 4 baris).</li>
+<li><b>REFRESH:</b> buzzer 1× sebagai tanda "jauhkan tangan". Roller turun dan meratakan semua baris, lalu naik lagi. Carriage berjalan per baris titik dan memberi pulsa solenoid 30 ms di setiap titik timbul.</li>
+<li><b>SIAP:</b> motor di-disable (pin tetap tertahan tanpa daya), buzzer 2×, lalu tunggu tombol berikut/sebelum.</li>
+</ol></div>
+</section>
+
+<section aria-labelledby="h-safe" style="margin-top:48px">
+<div class="panel warn">
+<h2 class="sec" id="h-safe">Keselamatan & regulasi</h2>
+<ul>
+<li>Tidak ada tegangan jala-jala di dalam alat. Adaptor eksternal ber-SNI, plus polyfuse di input 12 V.</li>
+<li>Titik jepit: carriage dan roller hanya bergerak setelah bunyi peringatan, dan rel tertutup casing. Rencananya ditambah sensor tutup/tangan agar gerak berhenti saat disentuh.</li>
+<li>Kontak kulit: pin stainless dengan ujung dibulatkan dan bebas gerinda. Permukaannya bisa dibersihkan dengan alkohol 70% karena dipakai bergantian di perpustakaan.</li>
+<li>Bila nanti memakai baterai Li-ion: wajib BMS 3S dengan proteksi arus lebih dan suhu.</li>
+<li>Regulasi: ini alat bantu baca (assistive technology), bukan alat diagnosis atau terapi, jadi umumnya tidak termasuk alat kesehatan yang wajib izin edar Kemenkes. Statusnya tetap perlu dikonfirmasi bila dipasarkan dengan klaim medis. Acuan keselamatan listrik yang relevan: IEC 62368-1.</li>
+</ul>
+</div>
+</section>
+
+<section aria-labelledby="h-next">
+<h2 class="sec" id="h-next">Langkah berikutnya</h2>
+<div class="panel"><ol>
+<li>Uji coba 1 sel: cari diameter lubang dan tebal silikon yang memberi gaya tahan pin ± 0,3–0,5 N, cukup kuat menahan jari tapi masih bisa didorong solenoid.</li>
+<li>Bangun versi 1 baris × 20 sel (sumbu X saja), ukur waktu refresh dan keandalan.</li>
+<li>Uji keterbacaan bersama pengguna tunanetra di perpustakaan atau SLB setempat.</li>
+<li>Naik ke 4 baris (sumbu Y), lalu tambah 3 solenoid untuk mempercepat refresh.</li>
+</ol></div>
+</section>
+
+</main></div>
+<script type="module" src="../js/braille.js"></script>
+</body></html>
