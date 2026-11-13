@@ -28,6 +28,23 @@ Setelah muncul `Tersambung sebagai ...`, kirim pesan dari nomor pribadimu ke nom
 
 Supaya tetap hidup setelah terminal ditutup: `npm i -g pm2 && pm2 start index.js --name wa-bridge && pm2 save`.
 
+## Jalan di HP Android (Termux)
+
+Tidak perlu VPS atau API key: HP Android (boleh HP nomor bot itu sendiri) bisa jadi mesinnya.
+
+```bash
+# Pasang Termux dari F-Droid (bukan Play Store), lalu:
+pkg update && pkg install nodejs-lts git
+npm i -g @anthropic-ai/claude-code
+claude                       # login sekali dengan akun Claude-mu, lalu keluar
+git clone https://github.com/ponco533/web-pertama && cd web-pertama/wa-bridge
+npm install && cp .env.example .env && nano .env
+termux-wake-lock             # supaya Android tidak menidurkan Termux
+npm start
+```
+
+Matikan juga "optimasi baterai" untuk Termux di pengaturan Android. Agar `git push` jalan dari HP, login GitHub dulu (mis. `pkg install gh && gh auth login`).
+
 ## Pakai
 
 Tulis permintaan biasa, mis. *"tambahkan bagian FAQ di projects/braille.html, commit dan push"*.
